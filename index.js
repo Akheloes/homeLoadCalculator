@@ -1,11 +1,15 @@
-const express = require('express')
+import express from 'express'
+import mustacheExpress from 'mustache-express'
 const app = express()
-const port = 3000
 
-app.get('/', (req, res) => {
-  res.send('Hello World! Ey!')
-})
+app.engine('html', mustacheExpress())
+app.set('view engine', 'html')
+app.set('views', './views')
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+import paymentController from './controllers/paymentController.js'
+
+app.use('/', paymentController)
+
+app.listen(3000, () => {
+  console.log('Server is running on port 3000')
 })
