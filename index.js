@@ -1,11 +1,19 @@
-const express = require('express')
+import express from 'express'
+import mustacheExpress from 'mustache-express'
+import config from './config.js'
+import logToSyslog from './utils/logger.js'
 const app = express()
-const port = 3000
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
+app.engine('html', mustacheExpress())
+app.set('view engine', 'html')
+app.set('views', './src/views')
+
+import paymentController from './src/controllers/paymentController.js'
+
+app.use('/', paymentController)
+
+app.listen(config.server.port, () => {
+  logToSyslog('info', `server running on port ${config.server.port}`)
 })
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+export default app
